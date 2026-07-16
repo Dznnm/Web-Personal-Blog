@@ -9,10 +9,10 @@
         <div class="articles">
             {% for article in articles %}
                 <div class="article">
-                    <p>
-                    {{ article.title }}
+                    <a href="{{ url_for('article', article_id=article.id) }}">
+                        {{ article.title }}
+                    </a>
                     <small>{{ article.date }}</small>
-                    </p> 
                 </div>
             {% endfor %}
         </div>
