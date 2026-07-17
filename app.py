@@ -1,6 +1,12 @@
 from flask import Flask, render_template, request
+import json
+from datetime import datetime
 
 app = Flask(__name__)
+
+#date and time
+now = datetime.now()
+timestamp = now.strftime("%Y-%m-%d")
 
 #Routes
 @app.route('/', methods=['GET', 'POST'])
@@ -22,21 +28,54 @@ def home():
 
 @app.route('/article/<int:article_id>')
 def article(article_id):
-    articles = [
-        {"id": 1,
-         "date": "2024-06-01",
-         "title": "My First Blog Post",
-         "content": "This is the content of my first blog post."
-        },
-        {"id": 2,
-            "date": "2024-06-02",
-         "title": "My Second Blog Post",
-         "content": "This is the content of my second blog post."
-        }
-    ]
+    def load_articles():
+        try:
+            with open("articles.json", "r") as file:
+                return json.load(file)
+        except FileNotFoundError:
+            return []
+        except json.JSONDecodeError:
+            return []
 
-    article = next((a for a in articles if a["id"] == article_id), None)
-    if article is None:
-        return render_template('404.html'), 404
+    articles = load_articles()
+    article = None
+    for a in articles:
+        if a['id'] == article_id:
+            article = a
+            break
 
     return render_template('article.html', article=article)
+
+@app.route('/add_article', methods=['GET', 'POST'])
+def add_article():
+    if request.method == 'POST':
+        title = request.form['title']
+        content = request.form['content']
+
+        def load_articles():
+            try:
+                with open("articles.json", "r") as file:
+                    return json.load(file)
+            except FileNotFoundError:
+                return []
+            except json.JSONDecodeError:
+                return []
+
+        def save_articles(articles):
+            with open("articles.json", "w") as file:
+                json.dump(articles, file, indent=4)
+
+        articles = load_articles()
+        highest_id = max(article["id"] for article in articles) if articles else 0
+        new_article = {
+            "id": highest_id + 1,
+            "date": timestamp,
+            "title": title,
+            "content": content
+        }
+        articles.append(new_article)
+        save_articles(articles)
+
+        return render_template('add_article.html', success=True)
+
+    return render_template('add_article.html', success=False)
