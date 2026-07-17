@@ -10,5 +10,11 @@
         "date": "2024-06-02",
         "title": "My Second Blog Post",
         "content": "This is the content of my second blog post."
+    },
+    {
+        "id": 3,
+        "date": "2026-07-17",
+        "title": "My blog progress",
+        "content": "man my crush really crushed me"
     }
 ]

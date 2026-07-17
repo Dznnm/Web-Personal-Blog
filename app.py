@@ -8,22 +8,24 @@ app = Flask(__name__)
 now = datetime.now()
 timestamp = now.strftime("%Y-%m-%d")
 
+#helepr functions
+def load_articles():
+    try:
+        with open("articles.json", "r") as file:
+            return json.load(file)
+    except FileNotFoundError:
+        return []
+    except json.JSONDecodeError:
+        return []
+
+def save_articles(articles):
+    with open("articles.json", "w") as file:
+        json.dump(articles, file, indent=4)
+
 #Routes
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    articles = [
-        {"id": 1,
-         "date": "2024-06-01",
-         "title": "My First Blog Post",
-         "content": "This is the content of my first blog post."
-        },
-        {"id": 2,
-            "date": "2024-06-02",
-         "title": "My Second Blog Post",
-         "content": "This is the content of my second blog post."
-        }
-    ]
-
+    articles = load_articles()
     return render_template('home.html', articles=articles)
 
 @app.route('/article/<int:article_id>')
@@ -51,19 +53,6 @@ def add_article():
     if request.method == 'POST':
         title = request.form['title']
         content = request.form['content']
-
-        def load_articles():
-            try:
-                with open("articles.json", "r") as file:
-                    return json.load(file)
-            except FileNotFoundError:
-                return []
-            except json.JSONDecodeError:
-                return []
-
-        def save_articles(articles):
-            with open("articles.json", "w") as file:
-                json.dump(articles, file, indent=4)
 
         articles = load_articles()
         highest_id = max(article["id"] for article in articles) if articles else 0
