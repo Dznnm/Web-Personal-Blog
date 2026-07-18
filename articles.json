@@ -3,7 +3,7 @@
         "id": 1,
         "date": "2024-06-01",
         "title": "My First Blog Post",
-        "content": "This is the content of my first blog post."
+        "content": "this should be the content of my first blog post"
     },
     {
         "id": 2,
@@ -16,5 +16,11 @@
         "date": "2026-07-17",
         "title": "My blog progress",
         "content": "man my crush really crushed me"
+    },
+    {
+        "id": 4,
+        "date": "2026-07-17",
+        "title": "on the grind",
+        "content": "still grinding for my place in the IT world"
     }
 ]

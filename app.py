@@ -8,7 +8,7 @@ app = Flask(__name__)
 now = datetime.now()
 timestamp = now.strftime("%Y-%m-%d")
 
-#helepr functions
+#helper functions
 def load_articles():
     try:
         with open("articles.json", "r") as file:
@@ -30,14 +30,6 @@ def home():
 
 @app.route('/article/<int:article_id>')
 def article(article_id):
-    def load_articles():
-        try:
-            with open("articles.json", "r") as file:
-                return json.load(file)
-        except FileNotFoundError:
-            return []
-        except json.JSONDecodeError:
-            return []
 
     articles = load_articles()
     article = None
@@ -68,3 +60,27 @@ def add_article():
         return render_template('add_article.html', success=True)
 
     return render_template('add_article.html', success=False)
+
+@app.route('/edit_article/<int:article_id>', methods=['GET', 'POST'])
+def edit_article(article_id):
+    articles = load_articles()
+    article = None
+    for a in articles:
+        if a["id"] == article_id:
+            article = a
+            break
+
+    if not article:
+        return "Article not found", 404
+
+    if request.method == 'POST':
+        title = request.form['title']
+        content = request.form['content']
+
+        article['title'] = title
+        article['content'] = content
+        save_articles(articles)
+
+        return render_template('edit_article.html', article=article, success=True)
+
+    return render_template('edit_article.html', article=article, success=False)
