@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, url_for, redirect
 import json
 from datetime import datetime
 
@@ -40,6 +40,10 @@ def article(article_id):
 
     return render_template('article.html', article=article)
 
+@app.route('/dashboard', methods=['GET', 'POST'])
+def dashboard():
+    return render_template('dashboard.html')
+
 @app.route('/add_article', methods=['GET', 'POST'])
 def add_article():
     if request.method == 'POST':
@@ -57,9 +61,9 @@ def add_article():
         articles.append(new_article)
         save_articles(articles)
 
-        return render_template('add_article.html', success=True)
+        return redirect(url_for('home'))
 
-    return render_template('add_article.html', success=False)
+    return render_template('add_article.html')
 
 @app.route('/edit_article/<int:article_id>', methods=['GET', 'POST'])
 def edit_article(article_id):

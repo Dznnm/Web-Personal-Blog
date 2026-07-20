@@ -22,5 +22,17 @@
         "date": "2026-07-17",
         "title": "on the grind",
         "content": "still grinding for my place in the IT world"
+    },
+    {
+        "id": 5,
+        "date": "2026-07-20",
+        "title": "Blog for Vale",
+        "content": "Prettiest girl in Gosyen!"
+    },
+    {
+        "id": 6,
+        "date": "2026-07-20",
+        "title": "Blog for Vale (2)",
+        "content": "she's also rlly smart"
     }
 ]
