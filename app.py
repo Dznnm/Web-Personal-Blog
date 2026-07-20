@@ -37,12 +37,17 @@ def article(article_id):
         if a['id'] == article_id:
             article = a
             break
+    for a in articles:
+        if a['id'] == article_id:
+            article = a
+            break
 
     return render_template('article.html', article=article)
 
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
-    return render_template('dashboard.html')
+    articles = load_articles()
+    return render_template('dashboard.html', articles=articles)
 
 @app.route('/add_article', methods=['GET', 'POST'])
 def add_article():
@@ -78,13 +83,18 @@ def edit_article(article_id):
         return "Article not found", 404
 
     if request.method == 'POST':
-        title = request.form['title']
-        content = request.form['content']
+        if request.form['edit_article'] == 'Update Article':
+            title = request.form['title']
+            content = request.form['content']
 
-        article['title'] = title
-        article['content'] = content
-        save_articles(articles)
+            article['title'] = title
+            article['content'] = content
+            save_articles(articles)
+        
+        if request.form['delete_article'] == 'Delete Article':
+            articles.remove(article)
+            save_articles(articles)
 
-        return render_template('edit_article.html', article=article, success=True)
+        return redirect(url_for('dashboard'))
 
     return render_template('edit_article.html', article=article, success=False)
