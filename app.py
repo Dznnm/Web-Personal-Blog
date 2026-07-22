@@ -23,6 +23,7 @@ def save_articles(articles):
         json.dump(articles, file, indent=4)
 
 #Routes
+#GUEST ROUTES
 @app.route('/', methods=['GET', 'POST'])
 def home():
     articles = load_articles()
@@ -42,12 +43,42 @@ def article(article_id):
             article = a
             break
 
-    return render_template('article.html', article=article)
+    return render_template('article_guest.html', article=article)
 
+#ADMIN ROUTES
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
     articles = load_articles()
+
+    if request.method == 'POST':
+        if request.form['action'] == 'Delete Article':
+            articles.remove(article)
+            save_articles(articles)
+        return redirect(url_for('dashboard'))
+    
     return render_template('dashboard.html', articles=articles)
+
+@app.route('/articled/<int:article_id>')
+def articled(article_id):
+
+    articles = load_articles()
+    article = None
+    for a in articles:
+        if a['id'] == article_id:
+            article = a
+            break
+    for a in articles:
+        if a['id'] == article_id:
+            article = a
+            break
+    if request.method == 'POST':
+        if request.form['action'] == 'Delete Article':
+            articles.remove(article)
+            save_articles(articles)
+
+        return redirect(url_for('dashboard'))
+
+    return render_template('article.html', article=article)
 
 @app.route('/add_article', methods=['GET', 'POST'])
 def add_article():
@@ -83,7 +114,7 @@ def edit_article(article_id):
         return "Article not found", 404
 
     if request.method == 'POST':
-        if request.form['edit_article'] == 'Update Article':
+        if request.form['action'] == 'Update Article':
             title = request.form['title']
             content = request.form['content']
 
@@ -91,7 +122,7 @@ def edit_article(article_id):
             article['content'] = content
             save_articles(articles)
         
-        if request.form['delete_article'] == 'Delete Article':
+        if request.form['action'] == 'Delete Article':
             articles.remove(article)
             save_articles(articles)
 

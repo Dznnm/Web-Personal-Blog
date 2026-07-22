@@ -13,10 +13,10 @@
             <label for="content">Content:</label>
             <textarea id="content" name="content" required>{{ article.content }}</textarea>
             <br><br>
-            <input type="submit" value="Update Article">
+            <input type="submit" name="action" value="Update Article">
         </form>
-        <form method="POST" action="{{ url_for('delete_article', article_id=article.id) }}">
-            <input type="submit" value="Delete Article">
+        <form method="POST" action="{{ url_for('edit_article', article_id=article.id) }}">
+            <input type="submit" name="action" value="Delete Article">
         </form>
     </body>
 </html>
