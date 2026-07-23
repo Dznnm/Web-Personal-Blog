@@ -1,9 +1,10 @@
-from flask import Flask, render_template, request, url_for, redirect
+from flask import Flask, render_template, request, url_for, redirect, session
 import json
 from datetime import datetime
 
 app = Flask(__name__)
-
+app.secret_key = 'skey'
+ 
 #date and time
 now = datetime.now()
 timestamp = now.strftime("%Y-%m-%d")
@@ -51,51 +52,53 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-
-        # Replace this with your actual authentication logic
         if username == 'valedian' and password == 'password':
+            session['user'] = request.form['username']
             return redirect(url_for('dashboard'))
         else:
             return "Invalid credentials", 401
 
     return render_template('login.html')
 
+@app.route('/logout')
+def logout():
+    session.pop('user', None)
+    return 'You have been logged out. <a href="/">Go to Home</a>'
+
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
     articles = load_articles()
-
+    if 'user' not in session:
+        return redirect(url_for('login'))
     if request.method == 'POST':
         if request.form['action'] == 'Delete Article':
             articles.remove(article)
             save_articles(articles)
         return redirect(url_for('dashboard'))
-    
-    return render_template('dashboard.html', articles=articles)
+    return render_template('dashboard.html', user = session['user'], articles=articles)
 
 @app.route('/articled/<int:article_id>')
 def articled(article_id):
-
+    if 'user' not in session:
+        return redirect(url_for('login'))
     articles = load_articles()
     article = None
     for a in articles:
         if a['id'] == article_id:
             article = a
             break
-    for a in articles:
-        if a['id'] == article_id:
-            article = a
-            break
     if request.method == 'POST':
         if request.form['action'] == 'Delete Article':
             articles.remove(article)
             save_articles(articles)
 
         return redirect(url_for('dashboard'))
-
     return render_template('article.html', article=article)
 
 @app.route('/add_article', methods=['GET', 'POST'])
 def add_article():
+    if 'user' not in session:
+        return redirect(url_for('login'))
     if request.method == 'POST':
         title = request.form['title']
         content = request.form['content']
@@ -117,6 +120,9 @@ def add_article():
 
 @app.route('/edit_article/<int:article_id>', methods=['GET', 'POST'])
 def edit_article(article_id):
+    if 'user' not in session:
+        return redirect(url_for('login'))
+
     articles = load_articles()
     article = None
     for a in articles:
