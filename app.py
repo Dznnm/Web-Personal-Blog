@@ -46,6 +46,20 @@ def article(article_id):
     return render_template('article_guest.html', article=article)
 
 #ADMIN ROUTES
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        # Replace this with your actual authentication logic
+        if username == 'valedian' and password == 'password':
+            return redirect(url_for('dashboard'))
+        else:
+            return "Invalid credentials", 401
+
+    return render_template('login.html')
+
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
     articles = load_articles()
