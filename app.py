@@ -1,10 +1,17 @@
 from flask import Flask, render_template, request, url_for, redirect, session
 import json
 from datetime import datetime
+import bcrypt
+from dotenv import load_dotenv
+import os
 
 app = Flask(__name__)
 app.secret_key = 'skey'
- 
+
+load_dotenv()
+ADMIN_USERNAME = os.getenv("ADMIN_USERNAME")
+ADMIN_PW_HASH = os.getenv("ADMIN_PASSWORD").encode("utf-8")
+
 #date and time
 now = datetime.now()
 timestamp = now.strftime("%Y-%m-%d")
@@ -22,6 +29,18 @@ def load_articles():
 def save_articles(articles):
     with open("articles.json", "w") as file:
         json.dump(articles, file, indent=4)
+
+def hash_password(password):
+    return bcrypt.hashpw(
+        password.encode('utf-8'), 
+        bcrypt.gensalt()
+        )
+
+def check_password(password, hashed):
+    return bcrypt.checkpw(
+        password.encode('utf-8'),
+        hashed
+        )
 
 #Routes
 #GUEST ROUTES
@@ -52,7 +71,7 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        if username == 'valedian' and password == 'password':
+        if username == ADMIN_USERNAME and check_password(password, ADMIN_PW_HASH):
             session['user'] = request.form['username']
             return redirect(url_for('dashboard'))
         else:
