@@ -6,15 +6,13 @@ from dotenv import load_dotenv
 import os
 
 app = Flask(__name__)
-app.secret_key = 'skey'
 
 load_dotenv()
 ADMIN_USERNAME = os.getenv("ADMIN_USERNAME")
 ADMIN_PW_HASH = os.getenv("ADMIN_PASSWORD").encode("utf-8")
+app.secret_key = os.getenv("SECRET_KEY")
 
 #date and time
-now = datetime.now()
-timestamp = now.strftime("%Y-%m-%d")
 
 #helper functions
 def load_articles():
@@ -54,20 +52,20 @@ def article(article_id):
 
     articles = load_articles()
     article = None
-    for a in articles:
-        if a['id'] == article_id:
-            article = a
-            break
-    for a in articles:
-        if a['id'] == article_id:
-            article = a
-            break
 
+    for a in articles:
+            if a['id'] == article_id:
+                article = a
+                break
+    if article == None:
+        return redirect(url_for('home'))
+    
     return render_template('article_guest.html', article=article)
 
-#ADMIN ROUTES
+#LOGIN ROUTES
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    invalid_login = ""
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -75,15 +73,17 @@ def login():
             session['user'] = request.form['username']
             return redirect(url_for('dashboard'))
         else:
-            return "Invalid credentials", 401
+            invalid_login = 'Invalid username or password.'
+            return render_template('login.html', invalid_login=invalid_login)
 
-    return render_template('login.html')
+    return render_template('login.html', invalid_login=invalid_login)
 
 @app.route('/logout')
 def logout():
     session.pop('user', None)
     return 'You have been logged out. <a href="/">Go to Home</a>'
 
+#ADMIN ROUTES
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
     articles = load_articles()
@@ -102,10 +102,15 @@ def articled(article_id):
         return redirect(url_for('login'))
     articles = load_articles()
     article = None
+   
     for a in articles:
         if a['id'] == article_id:
             article = a
             break
+
+    if article == None:
+        return redirect(url_for('dashboard'))
+
     if request.method == 'POST':
         if request.form['action'] == 'Delete Article':
             articles.remove(article)
@@ -116,6 +121,8 @@ def articled(article_id):
 
 @app.route('/add_article', methods=['GET', 'POST'])
 def add_article():
+    now = datetime.now()
+    timestamp = now.strftime("%Y-%m-%d")
     if 'user' not in session:
         return redirect(url_for('login'))
     if request.method == 'POST':
@@ -133,7 +140,7 @@ def add_article():
         articles.append(new_article)
         save_articles(articles)
 
-        return redirect(url_for('home'))
+        return redirect(url_for('dashboard'))
 
     return render_template('add_article.html')
 
