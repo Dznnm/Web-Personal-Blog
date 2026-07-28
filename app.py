@@ -175,3 +175,6 @@ def edit_article(article_id):
         return redirect(url_for('dashboard'))
 
     return render_template('edit_article.html', article=article, success=False)
+
+if __name__ == "__main__":
+    app.run(debug=True)

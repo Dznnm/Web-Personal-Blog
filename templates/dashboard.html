@@ -5,6 +5,7 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     </head>
     <body>
+        <div class="container">
         <nav>
             <a href="{{ url_for('add_article') }}">Add Article</a>
         </nav>
@@ -16,11 +17,15 @@
                         {{ article.title }}
                     </a>
                     <small>{{ article.date }}</small>
-                    <a href="{{ url_for('edit_article', article_id=article.id) }}">Edit</a>
-                    <form method="POST" action="{{ url_for('edit_article', article_id=article.id) }}">
-                    <input type="submit" name="action" value="Delete Article">
-                    </form>
                 </div>
+                    <div class="ED">
+                        <a href="{{ url_for('edit_article', article_id=article.id) }}">Edit</a>
+                        <form method="POST" action="{{ url_for('edit_article', article_id=article.id) }}">
+                        <input type="submit" name="action" value="Delete Article">
+                        </form>
+        </div>
+                
             {% endfor %}
+        </div>
         </div>
     </body>

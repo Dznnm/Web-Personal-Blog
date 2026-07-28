@@ -5,8 +5,10 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     </head>
     <body>
+        <div class="container">
         <h1>{{ article.title }}</h1>
         <small>{{ article.date }}</small>
         <p>{{ article.content }}</p>
+        </div>
     </body>
 </html>

@@ -5,6 +5,7 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     </head>
     <body>
+        <div class="container">
         <h1>Vale's Lifeprint</h1>
         <div class="articles">
             {% for article in articles %}
@@ -15,5 +16,6 @@
                     <small>{{ article.date }}</small>
                 </div>
             {% endfor %}
+        </div>
         </div>
     </body>

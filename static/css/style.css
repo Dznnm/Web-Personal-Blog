@@ -1,0 +1,43 @@
+.container {
+     max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 2px solid black;
+    border-radius: 10px;
+    background-color: #f2f2f2;
+}
+
+body {
+    background-color: #ffffff;
+    font-family: monospace, sans-serif;
+}
+
+h1 {
+    text-align: center;
+    color: black;
+}
+
+.article {
+    display: flex;
+    justify-content: space-between
+}
+
+a {
+    color: rgb(255, 132, 0);
+    text-decoration: none;
+}
+
+small {
+    text-align: right;
+    border: rgb(0, 0, 0);
+    opacity: 50%;
+}
+
+.ED {
+    display: flex;
+    flex-direction: row;
+}
+
+.article {
+    margin-top: 5px;
+}

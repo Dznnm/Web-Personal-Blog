@@ -5,6 +5,7 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     </head>
     <body>
+        <div class="container">
         <h1>Welcome to Vale's Blog</h1>
         <label for="admin-login">Admin Login:</label>
         <form name="admin-login" method="POST" action="{{ url_for('login') }}">
@@ -17,4 +18,5 @@
             <input type="submit" value="Login">
         </form>
         <p>{{ invalid_login }}</p>
+        </div>
     </body>
