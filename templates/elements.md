@@ -1,6 +1,8 @@
 List:
 body
-h1
-.articles
-.article
-small
+container[
+    h1
+    .articles
+    .article
+    small
+    ]

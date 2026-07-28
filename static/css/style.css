@@ -36,6 +36,23 @@ small {
 .ED {
     display: flex;
     flex-direction: row;
+    font-family: monospace;
+    gap: 5px;
+    border-radius: 10px;
+}
+
+.ED, input {
+    color:rgb(255, 132, 0);
+    font-family: monospace;
+    border: none
+}
+
+.ED, input:hover {
+    cursor: pointer;
+}
+
+nav {
+    text-align: right;
 }
 
 .article {
