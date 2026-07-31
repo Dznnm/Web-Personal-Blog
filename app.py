@@ -84,16 +84,11 @@ def logout():
     return 'You have been logged out. <a href="/">Go to Home</a>'
 
 #ADMIN ROUTES
-@app.route('/dashboard', methods=['GET', 'POST'])
+@app.route('/dashboard', methods=['GET'])
 def dashboard():
     articles = load_articles()
     if 'user' not in session:
         return redirect(url_for('login'))
-    if request.method == 'POST':
-        if request.form['action'] == 'Delete Article':
-            articles.remove(article)
-            save_articles(articles)
-        return redirect(url_for('dashboard'))
     return render_template('dashboard.html', user = session['user'], articles=articles)
 
 @app.route('/articled/<int:article_id>')
